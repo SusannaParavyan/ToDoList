@@ -1,0 +1,13 @@
+{
+	"name": "todo_list",
+	"version": "1.0.0",
+	"authors": [
+		"Susanna.Paravian"
+	],
+	"main": "app.module.js",
+	"dependencies": {
+		"Materialize": "materialize#~0.97.5",
+		"angular": "~1.4.8"
+	},
+	"private": true
+}
