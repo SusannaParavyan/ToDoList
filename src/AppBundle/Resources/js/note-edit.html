@@ -1,0 +1,16 @@
+<div>
+    <div class="modal-content">
+        <div>
+            <label for="edit-note-title">Note title</label>
+            <input id="edit-note-title" type="text" ng-model="NoteEditCtrl.note.title" />
+        </div>
+        <div>
+            <label for="edit-note-content">Note content</label>
+            <textarea id="edit-note-content" class="materialize-textarea" ng-model="NoteEditCtrl.note.content"></textarea>
+        </div>
+        <div class="card-action right-align">
+            <a href="#" class="waves-effect waves-light btn red" ng-show="NoteEditCtrl.note.id" ng-click="NoteEditCtrl.deleteNote()">Delete</a>
+            <a href="#" class="waves-effect waves-light btn" ng-click="NoteEditCtrl.saveNote()">Save</a>
+        </div>
+    </div>
+</div>

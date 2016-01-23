@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\EventListener\RequestListener;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -19,8 +20,7 @@ class NoteController extends Controller
      */
     public function getAllAction()
     {
-        /** @var NoteRepository $noteRepository */
-        $noteRepository = $this->getDoctrine()->getManager()->getRepository(Note::class);
+        $noteRepository = $this->get('repository.note');
         $notes = $noteRepository->findAll();
         $notesNormalized = $this->get('serializer')->normalize($notes);
         return new JsonResponse($notesNormalized);
@@ -32,17 +32,19 @@ class NoteController extends Controller
      */
     public function createAction(Request $request)
     {
-        $payload = json_decode($request->getContent(), true);
+
         $note = new Note();
-        $note->setTitle($payload['title']);
-        $note->setContent($payload['content']);
-        /** @var EntityManager $em */
+        $note->setTitle($request->get('title'));
+        $note->setContent($request->get('content'));
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($note);
         $em->flush();
+
         $noteNormalized = $this->get('serializer')->normalize($note);
         return new JsonResponse($noteNormalized);
     }
+
 
     /**
      * @Route("/note/{id}", name="note_update")
@@ -50,13 +52,13 @@ class NoteController extends Controller
      */
     public function updateAction(Request $request, Note $note)
     {
-        $payload = json_decode($request->getContent(), true);
-        $note->setTitle($payload['title']);
-        $note->setContent($payload['content']);
-        /** @var EntityManager $em */
+        $note->setTitle($request->get('title'));
+        $note->setContent($request->get('content'));
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($note);
         $em->flush();
+
         $noteNormalized = $this->get('serializer')->normalize($note);
         return new JsonResponse($noteNormalized);
     }
@@ -65,12 +67,11 @@ class NoteController extends Controller
      * @Route("/note/{id}", name="note_delete")
      * @Method("DELETE")
      */
-    public function deleteAction(Note $note)
-    {
-        /** @var EntityManager $em */
+    public function deleteAction(Note $note){
         $em = $this->getDoctrine()->getManager();
         $em->remove($note);
         $em->flush();
+
         return new JsonResponse([]);
     }
 }
